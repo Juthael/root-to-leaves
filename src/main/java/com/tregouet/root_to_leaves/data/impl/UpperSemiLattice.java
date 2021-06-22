@@ -119,65 +119,6 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 	}
 	
 	@Override
-	public T getMaximum() {
-		return root;
-	}
-	
-	@Override
-	public Set<T> getMinimalElements() {
-		Set<T> minElem = set.stream()
-							.filter(n -> relation.get(n).isEmpty())
-							.collect(Collectors.toSet());
-		return minElem;
-	}	
-	
-	@Override
-	public Map<T, Set<T>> getPrecRelationMap() {
-		Map<T, Set<T>> precRelationMap = new HashMap<>();
-		for (Entry<T, Set<T>> entry : precRelation.entrySet()) {
-			precRelationMap.put(entry.getKey(), new HashSet<T>(entry.getValue()));
-		}
-		return precRelationMap;
-	}
-	
-	@Override
-	public Set<T> getPredecessorsOf(T elem){
-		return new HashSet<T>(precRelation.get(elem));
-	}
-	
-	@Override
-	public Map<T, Set<T>> getRelationMap() {
-		Map<T, Set<T>> relationMap = new HashMap<>();
-		for (Entry<T, Set<T>> entry : relation.entrySet()) {
-			relationMap.put(entry.getKey(), new HashSet<T>(entry.getValue()));
-		}
-		return relationMap;
-	}	
-	
-	@Override
-	public IUpperSemiLattice<T> getRestrictionTo(Set<T> subset) {
-		Map<T, Set<T>> restrictionMap = new HashMap<T, Set<T>>();
-		for (T key : relation.keySet()) {
-			if (subset.contains(key)) {
-				Set<T> value = new HashSet<T>(relation.get(key));
-				value.retainAll(subset);
-				restrictionMap.put(key, value);
-			}
-		}
-		return new UpperSemiLattice<T>(restrictionMap);
-	}
-	
-	@Override
-	public T getRoot() {
-		return root;
-	}
-
-	@Override
-	public Set<T> getSet(){
-		return new HashSet<T>(set);
-	}
-
-	@Override
 	public Set<List<T>> getMaxChainsFrom(T root){
 		Set<List<T>> chains = new HashSet<List<T>>();
 		if (!succRelation.get(root).isEmpty()) {
@@ -196,6 +137,65 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			chains.add(chain);
 		}
 		return chains;
+	}
+	
+	@Override
+	public T getMaximum() {
+		return root;
+	}	
+	
+	@Override
+	public Set<T> getMinimalElements() {
+		Set<T> minElem = set.stream()
+							.filter(n -> relation.get(n).isEmpty())
+							.collect(Collectors.toSet());
+		return minElem;
+	}
+	
+	@Override
+	public Map<T, Set<T>> getPrecRelationMap() {
+		Map<T, Set<T>> precRelationMap = new HashMap<>();
+		for (Entry<T, Set<T>> entry : precRelation.entrySet()) {
+			precRelationMap.put(entry.getKey(), new HashSet<T>(entry.getValue()));
+		}
+		return precRelationMap;
+	}
+	
+	@Override
+	public Set<T> getPredecessorsOf(T elem){
+		return new HashSet<T>(precRelation.get(elem));
+	}	
+	
+	@Override
+	public Map<T, Set<T>> getRelationMap() {
+		Map<T, Set<T>> relationMap = new HashMap<>();
+		for (Entry<T, Set<T>> entry : relation.entrySet()) {
+			relationMap.put(entry.getKey(), new HashSet<T>(entry.getValue()));
+		}
+		return relationMap;
+	}
+	
+	@Override
+	public IUpperSemiLattice<T> getRestrictionTo(Set<T> subset) {
+		Map<T, Set<T>> restrictionMap = new HashMap<T, Set<T>>();
+		for (T key : relation.keySet()) {
+			if (subset.contains(key)) {
+				Set<T> value = new HashSet<T>(relation.get(key));
+				value.retainAll(subset);
+				restrictionMap.put(key, value);
+			}
+		}
+		return new UpperSemiLattice<T>(restrictionMap);
+	}
+
+	@Override
+	public T getRoot() {
+		return root;
+	}
+
+	@Override
+	public Set<T> getSet(){
+		return new HashSet<T>(set);
 	}
 
 	@Override
@@ -273,6 +273,11 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 		return result;
 	}
 
+	@Override 
+	public String toString() {
+		return toString(root, 0);
+	}
+
 	//successor relation must be set beforehand
 	private void setPrecRelation() {
 		for (T elem : set) {
@@ -284,7 +289,7 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			}
 		}
 	}
-
+	
 	private void setSuccRelation() {
 		for (T key : set) {
 			succRelation.put(key, new HashSet<T>(relation.get(key)));
@@ -301,5 +306,16 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			}
 		}
 	}
+	
+	private String toString(T root, int rankFromStart) {
+		StringBuilder sB = new StringBuilder();
+		for (int i = 0 ; i < rankFromStart ; i++)
+			sB.append("   ");
+		sB.append(root.toString() + System.lineSeparator());
+		for (T subT : getSuccRelationMap().get(root)) {
+			sB.append(toString(subT, rankFromStart + 1));
+		}
+		return sB.toString();
+	}	
 
 }

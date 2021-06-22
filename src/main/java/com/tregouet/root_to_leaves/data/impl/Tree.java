@@ -11,8 +11,8 @@ public class Tree<T> extends UpperSemiLattice<T> implements ITree<T> {
 	private final Set<T> leaves;
 	
 	//for test use only
-	public Tree(Map<T, Set<T>> semiLattice) {
-		super(semiLattice);
+	public Tree(Map<T, Set<T>> treeRelation) {
+		super(treeRelation);
 		leaves = getMinimalElements();
 	}
 	
@@ -31,10 +31,9 @@ public class Tree<T> extends UpperSemiLattice<T> implements ITree<T> {
 		}
 	}
 
+	@Override
 	public Set<T> getLeaves() {
 		return leaves;
 	}
-
-
 
 }

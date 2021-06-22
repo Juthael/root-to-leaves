@@ -19,23 +19,23 @@ public interface IUpperSemiLattice<T> {
 	
 	Set<T> getLowerSet(T elem);
 	
+	Set<List<T>> getMaxChainsFrom(T root);
+
 	T getMaximum();
 
 	Set<T> getMinimalElements();
-
+	
 	Map<T, Set<T>> getPrecRelationMap();
-	
-	Set<T> getPredecessorsOf(T elem);
 
-	Map<T, Set<T>> getRelationMap();
+	Set<T> getPredecessorsOf(T elem);
 	
+	Map<T, Set<T>> getRelationMap();
+
 	IUpperSemiLattice<T> getRestrictionTo(Set<T> subset);
 
 	T getRoot();
-
-	Set<T> getSet();
 	
-	Set<List<T>> getMaxChainsFrom(T root);
+	Set<T> getSet();
 
 	Set<T> getStrictLowerBounds(Set<T> elems);
 	
