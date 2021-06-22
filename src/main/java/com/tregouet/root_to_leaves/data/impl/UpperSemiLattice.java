@@ -107,11 +107,6 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 	}
 	
 	@Override
-	public Set<T> get(T elem) {
-		return new HashSet<>(relation.get(elem));
-	}
-	
-	@Override
 	public Set<T> getLowerSet(T elem) {
 		Set<T> lowerSet = getStrictLowerBounds(elem);
 		lowerSet.add(elem);
@@ -173,19 +168,6 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			relationMap.put(entry.getKey(), new HashSet<T>(entry.getValue()));
 		}
 		return relationMap;
-	}
-	
-	@Override
-	public IUpperSemiLattice<T> getRestrictionTo(Set<T> subset) {
-		Map<T, Set<T>> restrictionMap = new HashMap<T, Set<T>>();
-		for (T key : relation.keySet()) {
-			if (subset.contains(key)) {
-				Set<T> value = new HashSet<T>(relation.get(key));
-				value.retainAll(subset);
-				restrictionMap.put(key, value);
-			}
-		}
-		return new UpperSemiLattice<T>(restrictionMap);
 	}
 
 	@Override
