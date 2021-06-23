@@ -282,6 +282,8 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			Iterator<T> lowerIte = set.iterator();
 			T lower = lowerIte.next();
 			while (lower != upper) {
+				//HERE
+				//créer une variable
 				if (succRelation.get(lower).contains(upper))
 					succRelation.get(lower).removeAll(relation.get(upper));
 				lower = lowerIte.next();
