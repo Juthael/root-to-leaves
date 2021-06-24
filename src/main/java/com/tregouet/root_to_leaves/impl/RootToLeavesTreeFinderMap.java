@@ -13,7 +13,8 @@ import org.api.hyperdrive.Coord;
 import com.tregouet.root_to_leaves.IRootToLeavesTreeFinder;
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
-import com.tregouet.root_to_leaves.data.impl.Tree;
+import com.tregouet.root_to_leaves.data.impl.map.Tree;
+import com.tregouet.root_to_leaves.utils.CoordAdvancer;
 import com.tregouet.root_to_leaves.utils.NArrayBool;
 
 /**
@@ -55,18 +56,8 @@ import com.tregouet.root_to_leaves.utils.NArrayBool;
  *
  * @param <T> extends {@link Object}
  */
-public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
+public class RootToLeavesTreeFinderMap<T> implements IRootToLeavesTreeFinder<T> {
 
-	public static final boolean advanceInSpecifiedArea(int[] coords, int[] dimensions, int constant1, int constant2) {
-		for(int i=0;i<coords.length;++i) {
-	    	if (i != constant1 && i != constant2) {
-	    		if (++coords[i] < dimensions[i])
-	    			return true;
-	    		else coords[i] = 0;
-	    	}
-	    }
-	    return false;
-	}
 	private Set<ITree<T>> trees;
 	private T root;
 	private List<T> leaves;
@@ -75,7 +66,7 @@ public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 	
 	private NArrayBool intersectionArray = null;
 	
-	public RootToLeavesTreeFinder(){
+	public RootToLeavesTreeFinderMap(){
 	}
 
 	@Override
@@ -134,7 +125,7 @@ public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 								do {
 									intersectionArray.set(closedAreaInitial, true);
 								}
-								while (advanceInSpecifiedArea(closedAreaInitial, arrayDimensions, i, k));
+								while (CoordAdvancer.advanceInSpecifiedArea(closedAreaInitial, arrayDimensions, i, k));
 							}
 						}
 					}

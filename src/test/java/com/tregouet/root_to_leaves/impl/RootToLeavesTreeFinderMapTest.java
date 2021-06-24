@@ -28,15 +28,15 @@ import org.junit.Test;
 import com.tregouet.root_to_leaves.IRootToLeavesTreeFinder;
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
-import com.tregouet.root_to_leaves.data.impl.Tree;
-import com.tregouet.root_to_leaves.data.impl.UpperSemiLattice;
+import com.tregouet.root_to_leaves.data.impl.map.Tree;
+import com.tregouet.root_to_leaves.data.impl.map.UpperSemiLattice;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.parse.Parser;
 
-public class RootToLeavesTreeFinderTest {
+public class RootToLeavesTreeFinderMapTest {
 
 	// whenTreesRequestedThenExpectedReturned()
 	String max = "MAX";
@@ -91,7 +91,7 @@ public class RootToLeavesTreeFinderTest {
 			asExpected = (Arrays.equals(coords, expected[expIdx]));
 			expIdx++;
 		}
-		while (RootToLeavesTreeFinder.advanceInSpecifiedArea(coords, limits, constant1Idx, constant2Idx) && asExpected == true);
+		while (RootToLeavesTreeFinderMap.advanceInSpecifiedArea(coords, limits, constant1Idx, constant2Idx) && asExpected == true);
 		assertTrue(asExpected);
 	}
 
@@ -103,7 +103,7 @@ public class RootToLeavesTreeFinderTest {
 		//visualize lattice
 		buildGraph(semiLattice);
 		//build Trees
-		IRootToLeavesTreeFinder<Set<Integer>> tF = new RootToLeavesTreeFinder<Set<Integer>>();
+		IRootToLeavesTreeFinder<Set<Integer>> tF = new RootToLeavesTreeFinderMap<Set<Integer>>();
 		tF.input(semiLattice);
 		Set<ITree<Set<Integer>>> trees = tF.output();
 		System.out.println(trees.size() + " trees have been returned.");
@@ -132,7 +132,7 @@ public class RootToLeavesTreeFinderTest {
 		expectedTrees.add(new Tree<String>(mIaIIacIbIIabIcIIbc));
 		//test
 		Set<ITree<String>> returnedTrees;
-		IRootToLeavesTreeFinder<String> tF = new RootToLeavesTreeFinder<>();
+		IRootToLeavesTreeFinder<String> tF = new RootToLeavesTreeFinderMap<>();
 		System.out.println(uSL.toString() + System.lineSeparator());
 		tF.input(uSL);
 		returnedTrees = tF.output();
@@ -184,12 +184,19 @@ public class RootToLeavesTreeFinderTest {
 	}
 	
 	private Map<Set<Integer>, Set<Set<Integer>>> buildLargeUpperSemiLattice(){
+		return buildUSLFromPowerSetOfNElements(5);
+	}
+	
+	private Map<Set<Integer>, Set<Set<Integer>>> buildUSLFromPowerSetOfNElements(int n){
 		Map<Set<Integer>, Set<Set<Integer>>> relationMap = new HashMap<Set<Integer>, Set<Set<Integer>>>();
-		int[] atoms = new int[] {1, 2, 3, 4, 5};
+		int[] atoms = new int[n];
+		for (int i = 0 ; i < n ; i++) {
+			atoms[i] = i;
+		}
 		List<Set<Integer>> powerSet = new ArrayList<Set<Integer>>();
-		for (int i = 0 ; i < (1 << 5) ; i++) {
+		for (int i = 0 ; i < (1 << n) ; i++) {
 			Set<Integer> subset = new HashSet<Integer>();
-			for (int j = 0 ; j < 5 ; j++) {
+			for (int j = 0 ; j < n ; j++) {
 				if (((1 << j) & i) > 0)
 					subset.add(atoms[j]);
 			}

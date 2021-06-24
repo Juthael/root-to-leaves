@@ -1,4 +1,4 @@
-package com.tregouet.root_to_leaves.data.impl;
+package com.tregouet.root_to_leaves.data.impl.map;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -217,13 +217,6 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			upperBounds.add(e);
 		}
 		return upperBounds;
-	}
-
-	@Override
-	public Set<T> getSuccessorsInSpecifiedSubset(T elem, Set<T> subset) {
-		Set<T> succInSubset = new HashSet<>(succRelation.get(elem));
-		succInSubset.retainAll(subset);
-		return succInSubset;
 	}
 
 	@Override

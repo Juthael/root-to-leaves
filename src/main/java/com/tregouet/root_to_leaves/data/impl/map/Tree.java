@@ -1,4 +1,4 @@
-package com.tregouet.root_to_leaves.data.impl;
+package com.tregouet.root_to_leaves.data.impl.map;
 
 import java.util.HashSet;
 import java.util.Map;

@@ -39,10 +39,10 @@ public interface IUpperSemiLattice<T> {
 	
 	/**
 	 * 
-	 * @param root the maximum of the semilattice
+	 * @param firstElem any element
 	 * @return every chain from the root to a leaf in the graph of the successor relation of the semilattice
 	 */
-	Set<List<T>> getMaxChainsFrom(T root);
+	Set<List<T>> getMaxChainsFrom(T firstElem);
 
 	/**
 	 * 
@@ -117,15 +117,6 @@ public interface IUpperSemiLattice<T> {
 	 * @return the specified element's strict upper bounds
 	 */
 	Set<T> getStrictUpperBounds(T elem);
-	
-	/**
-	 * 
-	 * @param elem any element <i>x</i> in the semilattice
-	 * @param subset any subset <i>Y</i> in the semilattice
-	 * @return the set of elements <i>y</i> such that <i>y∈Y</i> and <i>xSy</i> (<i>S</i>
-	 * being the successor relation associated with the semilattice) 
-	 */
-	Set<T> getSuccessorsInSpecifiedSubset(T elem, Set<T> subset);
 	
 	/**
 	 * 
