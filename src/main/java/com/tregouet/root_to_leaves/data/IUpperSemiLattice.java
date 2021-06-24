@@ -43,6 +43,14 @@ public interface IUpperSemiLattice<T> {
 	 * @return every chain from the root to a leaf in the graph of the successor relation of the semilattice
 	 */
 	Set<List<T>> getMaxChainsFrom(T firstElem);
+	
+	/**
+	 * chain elements are indicated by their indexes in the topologically sorted set
+	 * @see #getSortedSet()
+	 * @param firstElem any elem
+	 * @return every chain from the root to a leaf in the graph of the successor relation of the semilattice
+	 */
+	Set<List<Integer>> getMaxChainsIndexesFrom(T firstElem);
 
 	/**
 	 * 
@@ -55,6 +63,12 @@ public interface IUpperSemiLattice<T> {
 	 * @return the leaves of the semilattice, i.e. its minimal elements
 	 */
 	Set<T> getMinimalElements();
+	
+	/**
+	 * @see #getSortedSet()
+	 * @return the leaves of the semilattice, as their index in the topologically sorted set
+	 */
+	Set<Integer> getMinimalElementsIndexes();
 	
 	/**
 	 * 
@@ -89,6 +103,12 @@ public interface IUpperSemiLattice<T> {
 	 * @return any element in the semilattice
 	 */
 	Set<T> getSet();
+	
+	/**
+	 * 
+	 * @return the topologically sorted set
+	 */
+	List<T> getSortedSet();
 
 	/**
 	 * 

@@ -88,6 +88,10 @@ public class OutfittedPoset<T> extends Poset<T> {
 		return chains;
 	}
 	
+	public Set<List<Integer>> getMaxChainsIndexesFrom(T elem){
+		return getMaxChainsIndexesFrom(sortedElements.indexOf(elem));
+	}
+	
 	public Set<T> getMinimalElements(){
 		Set<T> minimalElements = new HashSet<T>();
 		for (int idx : getMinimalElementsIndexes())
@@ -166,7 +170,7 @@ public class OutfittedPoset<T> extends Poset<T> {
 		return new HashSet<T>(sortedElements);
 	}
 	
-	public List<T> getSortedElements() {
+	public List<T> getSortedSet() {
 		return sortedElements;
 	}
 	

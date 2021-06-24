@@ -293,6 +293,23 @@ public class UpperSemiLattice<T> implements IUpperSemiLattice<T> {
 			sB.append(toString(subT, rankFromStart + 1));
 		}
 		return sB.toString();
+	}
+
+	@Override
+	public Set<List<Integer>> getMaxChainsIndexesFrom(T firstElem) {
+		Set<List<Integer>> maxChainsIndexes = new HashSet<List<Integer>>();
+		for (List<T> chain : getMaxChainsFrom(firstElem)) {
+			List<Integer> chainIndexes = new ArrayList<Integer>();
+			for (T elem : chain)
+				chainIndexes.add(set.indexOf(elem));
+			maxChainsIndexes.add(chainIndexes);
+		}
+		return maxChainsIndexes;
+	}
+
+	@Override
+	public List<T> getSortedSet() {
+		return set;
 	}	
 
 }
