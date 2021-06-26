@@ -5,30 +5,28 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.tregouet.root_to_leaves.IRootToLeavesTreeFinder;
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
-import com.tregouet.root_to_leaves.data.impl.matrix.TreeMatrix;
+import com.tregouet.root_to_leaves.data.impl.Tree;
 import com.tregouet.root_to_leaves.utils.CoordAdvancer;
 import com.tregouet.root_to_leaves.utils.NArrayBool;
 
 import fjab.poset.Poset;
 
-public class RootToLeavesTreeFinderMatrix<T> implements IRootToLeavesTreeFinder<T> {
+public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 
 	private List<ITree<T>> trees;
 	private List<T> sortedElements;
 	private int setSize;
 	private T root;
 	private List<Integer> leaves;
-	private List<List<List<Integer>>> listsOfChainsWithSameLeaf = new ArrayList<List<List<Integer>>>();
+	private List<List<List<Integer>>> listsOfIdxChainsWithSameLeaf = new ArrayList<List<List<Integer>>>();
 	private int[] arrayDimensions = null;
 	private NArrayBool intersectionArray = null;
 	
-	public RootToLeavesTreeFinderMatrix() {
+	public RootToLeavesTreeFinder() {
 	}
 
 	@Override
@@ -38,58 +36,58 @@ public class RootToLeavesTreeFinderMatrix<T> implements IRootToLeavesTreeFinder<
 		root = upperSemiLattice.getRoot();
 		leaves = new ArrayList<Integer>(upperSemiLattice.getMinimalElementsIndexes());
 		for (int i = 0 ; i < leaves.size() ; i++)
-			listsOfChainsWithSameLeaf.add(new ArrayList<List<Integer>>());
+			listsOfIdxChainsWithSameLeaf.add(new ArrayList<List<Integer>>());
 		Set<List<Integer>> rootToLeafChains = upperSemiLattice.getMaxChainsIndexesFrom(root);
 		int leafIdx;
 		for (List<Integer> chain : rootToLeafChains) {
 			leafIdx = leaves.indexOf(chain.get(chain.size() - 1));
-			listsOfChainsWithSameLeaf.get(leafIdx).add(chain);
+			listsOfIdxChainsWithSameLeaf.get(leafIdx).add(chain);
 		}
-		arrayDimensions = new int[listsOfChainsWithSameLeaf.size()];
-		for (int i = 0 ; i < listsOfChainsWithSameLeaf.size() ; i ++) {
-			arrayDimensions[i] = listsOfChainsWithSameLeaf.get(i).size();
+		arrayDimensions = new int[listsOfIdxChainsWithSameLeaf.size()];
+		for (int i = 0 ; i < listsOfIdxChainsWithSameLeaf.size() ; i ++) {
+			arrayDimensions[i] = listsOfIdxChainsWithSameLeaf.get(i).size();
 		}
 		intersectionArray = new NArrayBool(arrayDimensions);
 		setEvaluationArray();
+		setTrees();
 	}
 	
-	private List<ITree<T>> setTrees(){
-		List<ITree<T>> trees = new ArrayList<ITree<T>>();
+	private void setTrees(){
 		int[] coords = new int[arrayDimensions.length];
 		do {
 			if (intersectionArray.get(coords) == false) {
 				int[][] transitiveReduction = new int[setSize][setSize];
 				for (int i = 0 ; i < setSize ; i++) {
-					transitiveReduction[i][i] = 1;
+					transitiveReduction[i][i] = 1; 		//reflexivity
 				} 
-				Integer antecedentIdx;
-				Integer consequentIdx;
+				Integer prevElemIdx;
+				Integer nextElemIdx;
 				for (int i = 0 ; i < coords.length ; i++) {
 					Iterator<Integer> idxChainIterator;
-					for (List<Integer> idxChain : listsOfChainsWithSameLeaf.get(i)) {
+					for (List<Integer> idxChain : listsOfIdxChainsWithSameLeaf.get(i)) {
 						idxChainIterator = idxChain.iterator();
-						antecedentIdx = idxChainIterator.next();
+						prevElemIdx = idxChainIterator.next();
 						while (idxChainIterator.hasNext()) {
-							consequentIdx = idxChainIterator.next();
-							transitiveReduction[antecedentIdx][consequentIdx] = 1;
+							nextElemIdx = idxChainIterator.next();
+							transitiveReduction[prevElemIdx][nextElemIdx] = 1;
 							if (idxChainIterator.hasNext())
-								antecedentIdx = consequentIdx;
+								prevElemIdx = nextElemIdx;
 						}
 					}
 				}
-				trees.add(new TreeMatrix<>(sortedElements, transitiveReduction, Poset.SKIP_CHECKS, Poset.SKIP_SORTING));
+				trees.add(new Tree<T>(sortedElements, transitiveReduction, Poset.SKIP_CHECKS, Poset.SKIP_SORTING));
 			}
-		} while (true);
+		} while (CoordAdvancer.advance(coords, arrayDimensions));
 	}
 	
 	private final void setEvaluationArray() {
-		for (int i = 0 ; i < listsOfChainsWithSameLeaf.size() - 1 ; i++) {
-			for (int j = 0 ; j < listsOfChainsWithSameLeaf.get(i).size() ; j++) {
-				for (int k = i + 1 ; k < listsOfChainsWithSameLeaf.size() ; k++) {
-					for (int l = 0 ; l < listsOfChainsWithSameLeaf.get(k).size() ; l++) {
+		for (int i = 0 ; i < listsOfIdxChainsWithSameLeaf.size() - 1 ; i++) {
+			for (int j = 0 ; j < listsOfIdxChainsWithSameLeaf.get(i).size() ; j++) {
+				for (int k = i + 1 ; k < listsOfIdxChainsWithSameLeaf.size() ; k++) {
+					for (int l = 0 ; l < listsOfIdxChainsWithSameLeaf.get(k).size() ; l++) {
 						if (!noLateIntersectionFound(
-								listsOfChainsWithSameLeaf.get(i).get(j), listsOfChainsWithSameLeaf.get(k).get(l))) {
-							int[] closedAreaInitial = new int[listsOfChainsWithSameLeaf.size()];
+								listsOfIdxChainsWithSameLeaf.get(i).get(j), listsOfIdxChainsWithSameLeaf.get(k).get(l))) {
+							int[] closedAreaInitial = new int[listsOfIdxChainsWithSameLeaf.size()];
 							closedAreaInitial[i] = j;
 							closedAreaInitial[k] = l;
 							do {

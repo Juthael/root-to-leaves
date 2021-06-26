@@ -1,4 +1,4 @@
-package com.tregouet.root_to_leaves.data.impl.matrix;
+package com.tregouet.root_to_leaves.data.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +25,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		super(sortedElements, transitiveReduction, skipChecks, skipSorting);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#compare(T, T)
-	 */
 	@Override
 	public int compare(T elem1, T elem2) {
 		if (elem1.equals(elem2)) {
@@ -45,9 +42,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return UNCOMPARABLE;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getLowerSet(T)
-	 */
 	@Override
 	public Set<T> getLowerSet(T elem) {
 		Set<T> lowerSet = new HashSet<T>();
@@ -56,9 +50,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return lowerSet;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getLowerSetIndexes(T)
-	 */
 	@Override
 	public Set<Integer> getLowerSetIndexes(T elem){
 		int elemIdx = elements.indexOf(elem);
@@ -70,17 +61,11 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return lowerSetIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMaxChainsFrom(T)
-	 */
 	@Override
 	public Set<List<T>> getMaxChainsFrom(T firstElem) {
 		return getMaxChainsFrom(elements.indexOf(firstElem));
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMaxChainsFrom(int)
-	 */
 	@Override
 	public Set<List<T>> getMaxChainsFrom(int rootIdx){
 		Set<List<T>> chains = new HashSet<List<T>>();
@@ -94,9 +79,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return chains;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMaxChainsIndexesFrom(int)
-	 */
 	@Override
 	public Set<List<Integer>> getMaxChainsIndexesFrom(int rootIdx) {
 		Set<List<Integer>> chains = new HashSet<List<Integer>>();
@@ -120,17 +102,11 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return chains;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMaxChainsIndexesFrom(T)
-	 */
 	@Override
 	public Set<List<Integer>> getMaxChainsIndexesFrom(T elem){
 		return getMaxChainsIndexesFrom(elements.indexOf(elem));
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMinimalElements()
-	 */
 	@Override
 	public Set<T> getMinimalElements(){
 		Set<T> minimalElements = new HashSet<T>();
@@ -139,9 +115,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return minimalElements;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getMinimalElementsIndexes()
-	 */
 	@Override
 	public Set<Integer> getMinimalElementsIndexes(){
 		Set<Integer> minimalElementsIndexes = new HashSet<Integer>();
@@ -159,9 +132,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return minimalElementsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getPrecRelationMap()
-	 */
 	@Override
 	public Map<T, Set<T>> getPrecRelationMap() {
 		Map<T, Set<T>> prcRelation = new HashMap<T, Set<T>>();
@@ -178,9 +148,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return prcRelation;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getPredecessorsIndexesOf(T)
-	 */
 	@Override
 	public Set<Integer> getPredecessorsIndexesOf(T elem){
 		Set<Integer> predecessorsIndexes = new HashSet<Integer>();
@@ -192,9 +159,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return predecessorsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getPredecessorsOf(T)
-	 */
 	@Override
 	public Set<T> getPredecessorsOf(T elem){
 		Set<T> predecessors = new HashSet<T>();
@@ -203,9 +167,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return predecessors;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getRelationMap()
-	 */
 	@Override
 	public Map<T, Set<T>> getRelationMap() {
 		Map<T, Set<T>> relation = new HashMap<T, Set<T>>();
@@ -221,17 +182,11 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return relation;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getSet()
-	 */
 	@Override
 	public Set<T> getSet(){
 		return new HashSet<T>(elements);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getSortedSet()
-	 */
 	@Override
 	public List<T> getSortedSet() {
 		if (sortedElements == null) {
@@ -241,9 +196,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return sortedElements;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictLowerBounds(java.util.Set)
-	 */
 	@Override
 	public Set<T> getStrictLowerBounds(Set<T> elems) {
 		Set<T> strictLowerBounds = new HashSet<T>();
@@ -252,9 +204,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictLowerBounds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictLowerBounds(T)
-	 */
 	@Override
 	public Set<T> getStrictLowerBounds(T elem) {
 		Set<T> strictLowerBounds = new HashSet<T>();
@@ -263,9 +212,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictLowerBounds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictLowerBoundsIndexes(java.util.Set)
-	 */
 	@Override
 	public Set<Integer> getStrictLowerBoundsIndexes(Set<T> elems) {
 		Set<Integer> strictLowerBoundsIndexes = new HashSet<Integer>();
@@ -279,9 +225,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictLowerBoundsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictLowerBoundsIndexes(T)
-	 */
 	@Override
 	public Set<Integer> getStrictLowerBoundsIndexes(T elem) {
 		int elemIdx = elements.indexOf(elem);
@@ -293,9 +236,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictLowerBoundsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictUpperBounds(java.util.Set)
-	 */
 	@Override
 	public Set<T> getStrictUpperBounds(Set<T> elems) {
 		Set<T> strictUpperBounds = new HashSet<T>();
@@ -304,9 +244,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictUpperBounds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictUpperBounds(T)
-	 */
 	@Override
 	public Set<T> getStrictUpperBounds(T elem){
 		Set<T> strictUpperBounds = new HashSet<T>();
@@ -315,9 +252,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictUpperBounds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictUpperBoundsIndexes(java.util.Set)
-	 */
 	@Override
 	public Set<Integer> getStrictUpperBoundsIndexes(Set<T> elems){
 		Set<Integer> strictUpperBoundsIndexes = new HashSet<Integer>();
@@ -331,9 +265,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictUpperBoundsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getStrictUpperBoundsIndexes(T)
-	 */
 	@Override
 	public Set<Integer> getStrictUpperBoundsIndexes(T elem) {
 		Set<Integer> strictUpperBoundsIndexes = new HashSet<Integer>();
@@ -345,9 +276,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return strictUpperBoundsIndexes;
 	}	
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getSuccessorsIndexesOf(T)
-	 */
 	@Override
 	public Set<Integer> getSuccessorsIndexesOf(T elem) {
 		Set<Integer> successorsIndexes = new HashSet<Integer>();
@@ -359,9 +287,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return successorsIndexes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getSuccessorsOf(T)
-	 */
 	@Override
 	public Set<T> getSuccessorsOf(T elem){
 		Set<T> successors = new HashSet<T>();
@@ -370,9 +295,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return successors;
 	}	
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getSuccRelationMap()
-	 */
 	@Override
 	public Map<T, Set<T>> getSuccRelationMap() {
 		Map<T, Set<T>> succRelation = new HashMap<T, Set<T>>();
@@ -389,9 +311,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return succRelation;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getUpperSet(T)
-	 */
 	@Override
 	public Set<T> getUpperSet(T elem) {
 		Set<T> upperSet = new HashSet<T>();
@@ -400,9 +319,6 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		return upperSet;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.tregouet.root_to_leaves.data.impl.matrix.IPoset#getUpperSetIndexes(T)
-	 */
 	@Override
 	public Set<Integer> getUpperSetIndexes(T elem){
 		int elemIdx = elements.indexOf(elem);

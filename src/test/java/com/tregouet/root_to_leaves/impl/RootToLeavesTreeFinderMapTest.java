@@ -28,8 +28,8 @@ import org.junit.Test;
 import com.tregouet.root_to_leaves.IRootToLeavesTreeFinder;
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
-import com.tregouet.root_to_leaves.data.impl.map.Tree;
-import com.tregouet.root_to_leaves.data.impl.map.UpperSemiLattice;
+import com.tregouet.root_to_leaves.data.impl.UpperSemiLattice;
+import com.tregouet.root_to_leaves.utils.CoordAdvancer;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -91,7 +91,7 @@ public class RootToLeavesTreeFinderMapTest {
 			asExpected = (Arrays.equals(coords, expected[expIdx]));
 			expIdx++;
 		}
-		while (RootToLeavesTreeFinderMap.advanceInSpecifiedArea(coords, limits, constant1Idx, constant2Idx) && asExpected == true);
+		while (CoordAdvancer.advanceInSpecifiedArea(coords, limits, constant1Idx, constant2Idx) && asExpected == true);
 		assertTrue(asExpected);
 	}
 

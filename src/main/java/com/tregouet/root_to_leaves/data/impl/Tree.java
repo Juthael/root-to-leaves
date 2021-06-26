@@ -1,4 +1,4 @@
-package com.tregouet.root_to_leaves.data.impl.matrix;
+package com.tregouet.root_to_leaves.data.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,9 +9,9 @@ import java.util.stream.IntStream;
 
 import com.tregouet.root_to_leaves.data.ITree;
 
-public class TreeMatrix<T> extends OutfittedPoset<T> implements ITree<T> {
+public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 
-	public TreeMatrix(List<T> elements, int[][] incidenceMatrix, boolean skipChecks, boolean skipSorting) {
+	public Tree(List<T> elements, int[][] incidenceMatrix, boolean skipChecks, boolean skipSorting) {
 		super(elements, incidenceMatrix);
 	}
 	
