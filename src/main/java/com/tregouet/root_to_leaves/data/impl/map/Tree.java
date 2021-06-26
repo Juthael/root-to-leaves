@@ -27,12 +27,12 @@ public class Tree<T> extends UpperSemiLattice<T> implements ITree<T> {
 		super(root, subTrees);
 		leaves = new HashSet<T>();
 		for (ITree<T> subtree : subTrees) {
-			leaves.addAll(subtree.getLeaves());
+			leaves.addAll(subtree.getTreeLeaves());
 		}
 	}
 
 	@Override
-	public Set<T> getLeaves() {
+	public Set<T> getTreeLeaves() {
 		return leaves;
 	}
 

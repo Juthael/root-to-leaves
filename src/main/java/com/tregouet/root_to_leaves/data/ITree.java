@@ -1,13 +1,20 @@
 package com.tregouet.root_to_leaves.data;
 
+import java.util.List;
 import java.util.Set;
 
-public interface ITree<T> extends IUpperSemiLattice<T> {
+/*
+ * A poset in which any element is either part of the tree, or connected to no other element.
+ * 
+ */
+public interface ITree<T> extends IPoset<T> {
 	
-	/**
-	 * 
-	 * @return the minimal elements of the tree
-	 */
-	Set<T> getLeaves();
+	T getRoot();
+	
+	Set<T> getTreeLeaves();
+	
+	Set<T> getTreeSubset();
+	
+	List<T> getSortedTreeSubet();
 
 }

@@ -1,6 +1,8 @@
 package com.tregouet.root_to_leaves.utils;
 
-public class CoordAdvancer {
+import org.api.hyperdrive.Coord;
+
+public class CoordAdvancer extends Coord {
 
 	private CoordAdvancer() {
 	}

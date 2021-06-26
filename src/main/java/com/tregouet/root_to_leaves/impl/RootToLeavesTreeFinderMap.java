@@ -111,29 +111,22 @@ public class RootToLeavesTreeFinderMap<T> implements IRootToLeavesTreeFinder<T> 
 	
 	private final void setEvaluationArray() {
 		int[] chainIdxs = new int[chains.size()];
-		//HERE
-		try {
 		for (int i = 0 ; i < chainIdxs.length - 1 ; i++) {
 			for (int j = 0 ; j < chains.get(i).size() ; j++) {
 				for (int k = i + 1 ; k < chainIdxs.length ; k++) {
 					for (int l = 0 ; l < chains.get(k).size() ; l++) {
-
-							if (!noIntersectionFound(chains.get(i).get(j), chains.get(k).get(l))) {
-								int[] closedAreaInitial = new int[chainIdxs.length];
-								closedAreaInitial[i] = j;
-								closedAreaInitial[k] = l;
-								do {
-									intersectionArray.set(closedAreaInitial, true);
-								}
-								while (CoordAdvancer.advanceInSpecifiedArea(closedAreaInitial, arrayDimensions, i, k));
+						if (!noIntersectionFound(chains.get(i).get(j), chains.get(k).get(l))) {
+							int[] closedAreaInitial = new int[chainIdxs.length];
+							closedAreaInitial[i] = j;
+							closedAreaInitial[k] = l;
+							do {
+								intersectionArray.set(closedAreaInitial, true);
 							}
+							while (CoordAdvancer.advanceInSpecifiedArea(closedAreaInitial, arrayDimensions, i, k));
 						}
 					}
 				}
 			}
-		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
 		}		
 	}
 	
