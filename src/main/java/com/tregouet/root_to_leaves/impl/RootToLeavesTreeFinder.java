@@ -17,7 +17,7 @@ import fjab.poset.Poset;
 
 public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 
-	private List<ITree<T>> trees;
+	private List<ITree<T>> trees = new ArrayList<ITree<T>>();
 	private List<T> sortedElements;
 	private int setSize;
 	private T root;
@@ -33,7 +33,7 @@ public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 	public void input(IUpperSemiLattice<T> upperSemiLattice) {
 		sortedElements = upperSemiLattice.getSortedSet();
 		setSize = sortedElements.size();
-		root = upperSemiLattice.getRoot();
+		root = upperSemiLattice.getMaximum();
 		leaves = new ArrayList<Integer>(upperSemiLattice.getMinimalElementsIndexes());
 		for (int i = 0 ; i < leaves.size() ; i++)
 			listsOfIdxChainsWithSameLeaf.add(new ArrayList<List<Integer>>());
@@ -116,8 +116,7 @@ public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 	}
 
 	@Override
-	public Set<ITree<T>> output() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ITree<T>> output() {
+		return trees;
 	}
 }

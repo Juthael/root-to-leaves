@@ -3,6 +3,7 @@ package com.tregouet.root_to_leaves.data.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,13 +17,20 @@ import fjab.poset.Util;
 
 public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 
+	//Safe
 	public OutfittedPoset(List<T> elements, int[][] incidenceMatrix) {
 		super(elements, incidenceMatrix);
 	}
 	
-	public OutfittedPoset(List<T> sortedElements, int[][] transitiveReduction, boolean skipChecks, 
+	//UNSAFE : no validation of arguments
+	protected OutfittedPoset(List<T> sortedElements, int[][] transitiveReduction, boolean skipChecks, 
 			boolean skipSorting) {
 		super(sortedElements, transitiveReduction, skipChecks, skipSorting);
+	}
+	
+	//Safe
+	public OutfittedPoset(Map<T, Set<T>> relation) {
+		super(relation);
 	}
 	
 	@Override
@@ -62,6 +70,17 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 	}
 	
 	@Override
+	public Set<Integer> getLowerSetIndexes(Set<T> subset) {
+		Set<Integer> lowerSetIdxes = new HashSet<Integer>();
+		Iterator<T> subsetIte = subset.iterator();
+		if (subsetIte.hasNext())
+			lowerSetIdxes.addAll(getLowerSetIndexes(subsetIte.next()));
+		while (subsetIte.hasNext())
+			lowerSetIdxes.retainAll(getLowerSetIndexes(subsetIte.next()));
+		return lowerSetIdxes;
+	}	
+	
+	@Override
 	public Set<List<T>> getMaxChainsFrom(T firstElem) {
 		return getMaxChainsFrom(elements.indexOf(firstElem));
 	}
@@ -80,21 +99,22 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 	}
 	
 	@Override
-	public Set<List<Integer>> getMaxChainsIndexesFrom(int rootIdx) {
+	public Set<List<Integer>> getMaxChainsIndexesFrom(int firstElemIdx) {
 		Set<List<Integer>> chains = new HashSet<List<Integer>>();
 		Set<Integer> successorsIdxes = new HashSet<>();
 		for (int i = 0 ; i < elements.size() ; i++) {
-			if (i != rootIdx && transitiveReduction[rootIdx][i] == 1)
+			if (i != firstElemIdx && transitiveReduction[firstElemIdx][i] == 1)
 				successorsIdxes.add(i);
 		}
 		if (successorsIdxes.isEmpty()) {
 			List<Integer> chain = new ArrayList<Integer>();
-			chain.add(rootIdx);
+			chain.add(firstElemIdx);
+			chains.add(chain);
 		}
 		else {
 			for (int succIdx : successorsIdxes) {
 				for (List<Integer> chain : getMaxChainsIndexesFrom(succIdx)) {
-					chain.add(0, rootIdx);
+					chain.add(0, firstElemIdx);
 					chains.add(chain);
 				}
 			}
@@ -138,10 +158,8 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		for (int i = 0 ; i < elements.size() ; i++) {
 			Set<T> predecessors = new HashSet<>();
 			for (int j = 0 ; j < elements.size() ; j++) {
-				if (j != i) {
-					if (transitiveReduction[j][i] == 1)
-						predecessors.add(elements.get(j));
-				}
+				if (transitiveReduction[j][i] == 1 && j != i)
+					predecessors.add(elements.get(j));
 			}
 			prcRelation.put(elements.get(i), predecessors);
 		}
@@ -153,7 +171,7 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		Set<Integer> predecessorsIndexes = new HashSet<Integer>();
 		int elemIdx = elements.indexOf(elem);
 		for (int i = 0 ; i < elements.size() ; i++) {
-			if (i != elemIdx && transitiveReduction[i][elemIdx] == 1)
+			if (transitiveReduction[i][elemIdx] == 1 && i != elemIdx)
 				predecessorsIndexes.add(i);
 		}
 		return predecessorsIndexes;
@@ -230,7 +248,7 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		int elemIdx = elements.indexOf(elem);
 		Set<Integer> strictLowerBoundsIndexes = new HashSet<Integer>();
 		for (int i = 0 ; i < elements.size() ; i++) {
-			if (i != elemIdx && transitiveExpansion[elemIdx][i] == 1)
+			if (transitiveExpansion[elemIdx][i] == 1 && i != elemIdx)
 				strictLowerBoundsIndexes.add(i);
 		}
 		return strictLowerBoundsIndexes;
@@ -328,6 +346,35 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 				upperSetIndexes.add(i);
 		}
 		return upperSetIndexes;
+	}
+
+	@Override
+	public Set<T> getUpperSet(Set<T> subset) {
+		Set<T> upperSet = getUpperSetIndexes(subset)
+				.stream()
+				.map(n -> elements.get(n))
+				.collect(Collectors.toSet());
+		return upperSet;
+	}
+
+	@Override
+	public Set<T> getLowerSet(Set<T> subset) {
+		Set<T> lowerSet = getLowerSetIndexes(subset)
+				.stream()
+				.map(n -> elements.get(n))
+				.collect(Collectors.toSet());
+		return lowerSet;
+	}
+
+	@Override
+	public Set<Integer> getUpperSetIndexes(Set<T> subset) {
+		Set<Integer> upperSetIdxes = new HashSet<Integer>();
+		Iterator<T> subsetIte = subset.iterator();
+		if (subsetIte.hasNext())
+			upperSetIdxes.addAll(getUpperSetIndexes(subsetIte.next()));
+		while (subsetIte.hasNext())
+			upperSetIdxes.retainAll(getUpperSetIndexes(subsetIte.next()));
+		return upperSetIdxes;
 	}	
 
 }

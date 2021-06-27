@@ -1,13 +1,25 @@
 package com.tregouet.root_to_leaves.data.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.tregouet.root_to_leaves.data.IPoset;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
+import com.tregouet.root_to_leaves.error.InvalidSemiLatticeExeption;
 
 public class UpperSemiLattice<T> extends OutfittedPoset<T> implements IUpperSemiLattice<T> {
 
+	//UNSAFE : no validation of arguments
 	public UpperSemiLattice(List<T> elements, int[][] incidenceMatrix) {
 		super(elements, incidenceMatrix);
+	}
+	
+	//SAFE
+	public UpperSemiLattice(Map<T, Set<T>> relation) throws InvalidSemiLatticeExeption {
+		super(relation);
+		validateArgument();
 	}
 
 	@Override
@@ -35,10 +47,39 @@ public class UpperSemiLattice<T> extends OutfittedPoset<T> implements IUpperSemi
 	public T getMaximum() {
 		return sortedElements.get(0);
 	}
+	
+	private void validateArgument() throws InvalidSemiLatticeExeption {
+		for (int i = 0 ; i < elements.size() ; i++) {
+			for (int j = i + 1 ; j < elements.size() ; j++) {
+				Set<T> pair = new HashSet<T>();
+				pair.add(elements.get(i));
+				pair.add(elements.get(j));
+				Set<T> upperBounds = getUpperSet(pair);
+				T alledgedSupremum = getSupremum(pair);
+				if (upperBounds.contains(alledgedSupremum)) {
+					for (T upperBound : upperBounds) {
+						int comparisonResult = compare(alledgedSupremum, upperBound);
+						if (comparisonResult != IPoset.LOWER_BOUND && comparisonResult != IPoset.EQUALS)
+							throw new InvalidSemiLatticeExeption("UpperSemiLattice.validateArguments() : "
+									+ "inconsistency.");
+					}
+				}
+				else throw new InvalidSemiLatticeExeption("UpperSemiLattice.validateArguments() : "
+						+ "inconsistency.");
+			}
+		}
+	}
 
 	@Override
-	public T getRoot() {
-		return sortedElements.get(0);
+	public T getSupremum(Set<T> subset) {
+		int supremumIdx = -1;
+		int upperBoundIdx;
+		for (T upperBound : getUpperSet(subset)) {
+			upperBoundIdx = sortedElements.indexOf(upperBound);
+			if (upperBoundIdx > supremumIdx)
+				supremumIdx = upperBoundIdx;
+		}
+		return sortedElements.get(supremumIdx);
 	}
 
 }

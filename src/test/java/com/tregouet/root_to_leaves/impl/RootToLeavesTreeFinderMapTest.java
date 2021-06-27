@@ -28,7 +28,10 @@ import org.junit.Test;
 import com.tregouet.root_to_leaves.IRootToLeavesTreeFinder;
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
+import com.tregouet.root_to_leaves.data.impl.Tree;
 import com.tregouet.root_to_leaves.data.impl.UpperSemiLattice;
+import com.tregouet.root_to_leaves.error.InvalidSemiLatticeExeption;
+import com.tregouet.root_to_leaves.error.InvalidTreeException;
 import com.tregouet.root_to_leaves.utils.CoordAdvancer;
 
 import guru.nidi.graphviz.engine.Format;
@@ -97,21 +100,22 @@ public class RootToLeavesTreeFinderMapTest {
 
 	//FAILS
 	@Test
-	public void whenLargeInputThenOutputStillReturned() throws IOException {
+	public void whenLargeInputThenOutputStillReturned() throws IOException, InvalidSemiLatticeExeption {
 		Map<Set<Integer>, Set<Set<Integer>>> relationMap = buildLargeUpperSemiLattice();
 		IUpperSemiLattice<Set<Integer>> semiLattice = new UpperSemiLattice<Set<Integer>>(relationMap);
 		//visualize lattice
-		buildGraph(semiLattice);
+		buildGraph(semiLattice, new HashSet<Integer>());
 		//build Trees
-		IRootToLeavesTreeFinder<Set<Integer>> tF = new RootToLeavesTreeFinderMap<Set<Integer>>();
+		IRootToLeavesTreeFinder<Set<Integer>> tF = new RootToLeavesTreeFinder<Set<Integer>>();
 		tF.input(semiLattice);
-		Set<ITree<Set<Integer>>> trees = tF.output();
+		List<ITree<Set<Integer>>> trees = tF.output();
 		System.out.println(trees.size() + " trees have been returned.");
 		assertTrue(!trees.isEmpty());
 	}
 	
 	@Test
-	public void whenTreesRequestedThenExpectedReturned() {
+	public void whenTreesRequestedThenExpectedReturned() 
+			throws InvalidSemiLatticeExeption, InvalidTreeException, IOException {
 		//set up
 		relation.put(max, new HashSet<String>());
 		relation.put(a, new HashSet<String>());
@@ -130,29 +134,20 @@ public class RootToLeavesTreeFinderMapTest {
 		expectedTrees.add(new Tree<String>(mIbIIabIcIIacIIbc));
 		expectedTrees.add(new Tree<String>(mIaIIabIbIIbcIcIIac));
 		expectedTrees.add(new Tree<String>(mIaIIacIbIIabIcIIbc));
+		//visualization
+		//buildGraph(uSL, "");
 		//test
 		Set<ITree<String>> returnedTrees;
-		IRootToLeavesTreeFinder<String> tF = new RootToLeavesTreeFinderMap<>();
+		IRootToLeavesTreeFinder<String> tF = new RootToLeavesTreeFinder<>();
 		System.out.println(uSL.toString() + System.lineSeparator());
 		tF.input(uSL);
-		returnedTrees = tF.output();
+		returnedTrees = new HashSet<ITree<String>>(tF.output());
 		for (ITree<String> tree : returnedTrees)
 			System.out.println(tree.toString() + System.lineSeparator());
 		assertTrue(returnedTrees.equals(expectedTrees));
 	}
 	
-	private void buildGraph(IUpperSemiLattice<Set<Integer>> semiLattice) throws IOException {
-		//Get file name and path
-		String fileName;
-		String graphPath;
-		System.out.print("Enter the name of the graph file :");
-		Scanner sc = new Scanner(System.in);
-		fileName = sc.nextLine();
-		System.out.println(System.lineSeparator() + "Enter a location for the graph file : ");
-		System.out.println("Ex : D:\\ProjetDocs\\essais_viz\\");
-		graphPath = sc.nextLine();
-		sc.close();
-		System.out.println(System.lineSeparator() + "Got it.");
+	private void buildGraph(IUpperSemiLattice<Set<Integer>> semiLattice, Set<Integer> anySet) throws IOException {
 		//buildGraph
 		Graph<String, DefaultEdge> graph = GraphTypeBuilder
 				.<String, DefaultEdge> directed().allowingMultipleEdges(false).allowingSelfLoops(false)
@@ -165,6 +160,39 @@ public class RootToLeavesTreeFinderMapTest {
 				graph.addEdge(entry.getKey().toString(), subSet.toString());
 			}
 		}
+		//convert in DOT format
+		printGraph(graph);
+	}
+	
+	private void buildGraph(IUpperSemiLattice<String> semiLattice, String anyString) throws IOException {
+		//buildGraph
+		Graph<String, DefaultEdge> graph = GraphTypeBuilder
+				.<String, DefaultEdge> directed().allowingMultipleEdges(false).allowingSelfLoops(false)
+				.edgeClass(DefaultEdge.class).weighted(false).buildGraph();
+		for (String elem : semiLattice.getSet()) {
+			graph.addVertex(elem);
+		}
+		for (Entry<String, Set<String>> entry : semiLattice.getSuccRelationMap().entrySet()) {
+			for (String subSet : entry.getValue()) {
+				graph.addEdge(entry.getKey(), subSet);
+			}
+		}
+		//convert in DOT format
+		printGraph(graph);
+	}	
+	
+	private void printGraph(Graph<String, DefaultEdge> graph) throws IOException {
+		//Get file name and path
+		String fileName;
+		String graphPath;
+		System.out.print("Enter the name of the graph file :");
+		Scanner sc = new Scanner(System.in);
+		fileName = sc.nextLine();
+		System.out.println(System.lineSeparator() + "Enter a location for the graph file : ");
+		System.out.println("Ex : D:\\ProjetDocs\\essais_viz\\");
+		graphPath = sc.nextLine();
+		sc.close();
+		System.out.println(System.lineSeparator() + "Got it.");
 		//convert in DOT format
 		DOTExporter<String,DefaultEdge> exporter = new DOTExporter<>();
 		exporter.setVertexAttributeProvider((v) -> {
@@ -179,7 +207,7 @@ public class RootToLeavesTreeFinderMapTest {
 		 * System.out.println(writer.toString);
 		 */
 		MutableGraph dotGraph = new Parser().read(stringDOT);
-		Graphviz.fromGraph(dotGraph).width(semiLattice.getSet().size()*100)
+		Graphviz.fromGraph(dotGraph).width(graph.vertexSet().size()*100)
 			.render(Format.PNG).toFile(new File(graphPath + fileName));
 	}
 	

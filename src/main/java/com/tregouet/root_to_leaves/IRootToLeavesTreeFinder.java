@@ -1,6 +1,6 @@
 package com.tregouet.root_to_leaves;
 
-import java.util.Set;
+import java.util.List;
 
 import com.tregouet.root_to_leaves.data.ITree;
 import com.tregouet.root_to_leaves.data.IUpperSemiLattice;
@@ -33,8 +33,8 @@ public interface IRootToLeavesTreeFinder<T> {
 	void input(IUpperSemiLattice<T> upperSemiLattice);
 	
 	/**
-	 * @return the set of all trees from the root to the leaves
+	 * @return a list of all trees from the root to the leaves
 	 */
-	Set<ITree<T>> output();
+	List<ITree<T>> output();
 
 }

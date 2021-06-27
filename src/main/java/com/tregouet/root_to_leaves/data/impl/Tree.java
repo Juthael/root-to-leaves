@@ -3,16 +3,25 @@ package com.tregouet.root_to_leaves.data.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.tregouet.root_to_leaves.data.ITree;
+import com.tregouet.root_to_leaves.error.InvalidTreeException;
 
 public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 
+	//UNSAFE : no validation of arguments
 	public Tree(List<T> elements, int[][] incidenceMatrix, boolean skipChecks, boolean skipSorting) {
 		super(elements, incidenceMatrix);
+	}
+	
+	//Safe
+	public Tree(Map<T, Set<T>> relation) throws InvalidTreeException {
+		super(relation);
+		validateArgument();
 	}
 	
 	public boolean isATreeElement(T elem) {
@@ -21,7 +30,7 @@ public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 	}
 	
 	public boolean isATreeElement(int elemIdx) {
-		if (elemIdx == 0) // then root
+		if (elements.get(elemIdx).equals(getRoot()))
 			return true;
 		boolean discarded = true;
 		int setIdx = 0;
@@ -57,7 +66,14 @@ public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 
 	@Override
 	public T getRoot() {
-		return elements.get(0);
+		return sortedElements.get(0);
 	}	
+	
+	private void validateArgument() throws InvalidTreeException {
+		Set<List<Integer>> chains = getMaxChainsIndexesFrom(getRoot());
+		Set<T> leaves = getTreeLeaves();
+		if (chains.size() != leaves.size())
+			throw new InvalidTreeException("Tree.validateArguments() : inconsistency.");
+	}
 
 }
