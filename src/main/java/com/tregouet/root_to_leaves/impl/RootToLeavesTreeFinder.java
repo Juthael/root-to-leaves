@@ -63,16 +63,14 @@ public class RootToLeavesTreeFinder<T> implements IRootToLeavesTreeFinder<T> {
 				Integer prevElemIdx;
 				Integer nextElemIdx;
 				for (int i = 0 ; i < coords.length ; i++) {
-					Iterator<Integer> idxChainIterator;
-					for (List<Integer> idxChain : listsOfIdxChainsWithSameLeaf.get(i)) {
-						idxChainIterator = idxChain.iterator();
-						prevElemIdx = idxChainIterator.next();
-						while (idxChainIterator.hasNext()) {
-							nextElemIdx = idxChainIterator.next();
-							transitiveReduction[prevElemIdx][nextElemIdx] = 1;
-							if (idxChainIterator.hasNext())
-								prevElemIdx = nextElemIdx;
-						}
+					Iterator<Integer> idxChainIterator = 
+							listsOfIdxChainsWithSameLeaf.get(i).get(coords[i]).iterator();
+					prevElemIdx = idxChainIterator.next();
+					while (idxChainIterator.hasNext()) {
+						nextElemIdx = idxChainIterator.next();
+						transitiveReduction[prevElemIdx][nextElemIdx] = 1;
+						if (idxChainIterator.hasNext())
+							prevElemIdx = nextElemIdx;
 					}
 				}
 				trees.add(new Tree<T>(sortedElements, transitiveReduction, Poset.SKIP_CHECKS, Poset.SKIP_SORTING));

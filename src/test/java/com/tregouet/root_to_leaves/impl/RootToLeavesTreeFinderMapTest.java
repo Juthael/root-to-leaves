@@ -139,11 +139,20 @@ public class RootToLeavesTreeFinderMapTest {
 		//test
 		Set<ITree<String>> returnedTrees;
 		IRootToLeavesTreeFinder<String> tF = new RootToLeavesTreeFinder<>();
-		System.out.println(uSL.toString() + System.lineSeparator());
-		tF.input(uSL);
 		returnedTrees = new HashSet<ITree<String>>(tF.output());
-		for (ITree<String> tree : returnedTrees)
-			System.out.println(tree.toString() + System.lineSeparator());
+		for (ITree<String> returned : returnedTrees)
+			System.out.println(returned.toString() + System.lineSeparator());
+		//HERE
+		Set<ITree<String>> testSet = new HashSet<ITree<String>>(expectedTrees);
+		testSet.removeAll(returnedTrees);
+		Set<ITree<String>> returnedNotExpected = new HashSet<ITree<String>>(returnedTrees);
+		for (ITree<String> expected : expectedTrees) {
+			for (ITree<String> returned : returnedTrees) {
+				if (expected.equals(returned)) {
+					System.out.println("Removed : " + Boolean.toString(returnedNotExpected.remove(returned)));
+				}
+			}
+		}
 		assertTrue(returnedTrees.equals(expectedTrees));
 	}
 	
@@ -266,7 +275,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIaIIabIcIIacIIbc.put(key, new HashSet<String>());
 		}
-		mIaIIabIcIIacIIbc.remove(b);
 		mIaIIabIcIIacIIbc.get(max).add(a);
 		mIaIIabIcIIacIIbc.get(max).add(c);
 		mIaIIabIcIIacIIbc.get(max).add(ab);
@@ -282,7 +290,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIaIIabIIacIbIIbc.put(key, new HashSet<String>());
 		}
-		mIaIIabIIacIbIIbc.remove(c);
 		mIaIIabIIacIbIIbc.get(max).add(a);
 		mIaIIabIIacIbIIbc.get(max).add(b);
 		mIaIIabIIacIbIIbc.get(max).add(ab);
@@ -298,7 +305,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIaIIabIIacIcIIbc.put(key, new HashSet<String>());
 		}	
-		mIaIIabIIacIcIIbc.remove(b);
 		mIaIIabIIacIcIIbc.get(max).add(a);
 		mIaIIabIIacIcIIbc.get(max).add(c);
 		mIaIIabIIacIcIIbc.get(max).add(ab);
@@ -330,7 +336,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIaIIacIbIIabIIbc.put(key, new HashSet<String>());
 		}
-		mIaIIacIbIIabIIbc.remove(c);
 		mIaIIacIbIIabIIbc.get(max).add(a);
 		mIaIIacIbIIabIIbc.get(max).add(b);
 		mIaIIacIbIIabIIbc.get(max).add(ab);
@@ -346,7 +351,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIbIIabIcIIacIIbc.put(key, new HashSet<String>());
 		}	
-		mIbIIabIcIIacIIbc.remove(a);
 		mIbIIabIcIIacIIbc.get(max).add(b);
 		mIbIIabIcIIacIIbc.get(max).add(c);
 		mIbIIabIcIIacIIbc.get(max).add(ab);
@@ -362,7 +366,6 @@ public class RootToLeavesTreeFinderMapTest {
 		for (String key : relation.keySet()) {
 			mIbIIabIIbcIcIIac.put(key, new HashSet<String>());
 		}	
-		mIbIIabIIbcIcIIac.remove(a);
 		mIbIIabIIbcIcIIac.get(max).add(b);
 		mIbIIabIIbcIcIIac.get(max).add(c);
 		mIbIIabIIbcIcIIac.get(max).add(ab);

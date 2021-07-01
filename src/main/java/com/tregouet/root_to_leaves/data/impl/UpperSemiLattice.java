@@ -12,8 +12,8 @@ import com.tregouet.root_to_leaves.error.InvalidSemiLatticeExeption;
 public class UpperSemiLattice<T> extends OutfittedPoset<T> implements IUpperSemiLattice<T> {
 
 	//UNSAFE : no validation of arguments
-	public UpperSemiLattice(List<T> elements, int[][] incidenceMatrix) {
-		super(elements, incidenceMatrix);
+	public UpperSemiLattice(List<T> sortedElements, int[][] incidenceMatrix) {
+		super(sortedElements, incidenceMatrix);
 	}
 	
 	//SAFE
@@ -72,14 +72,14 @@ public class UpperSemiLattice<T> extends OutfittedPoset<T> implements IUpperSemi
 
 	@Override
 	public T getSupremum(Set<T> subset) {
-		int supremumIdx = -1;
-		int upperBoundIdx;
+		int supremumIdxInSortedSet = -1;
+		int upperBoundIdxInSortedSet;
 		for (T upperBound : getUpperSet(subset)) {
-			upperBoundIdx = sortedElements.indexOf(upperBound);
-			if (upperBoundIdx > supremumIdx)
-				supremumIdx = upperBoundIdx;
+			upperBoundIdxInSortedSet = sortedElements.indexOf(upperBound);
+			if (upperBoundIdxInSortedSet > supremumIdxInSortedSet)
+				supremumIdxInSortedSet = upperBoundIdxInSortedSet;
 		}
-		return sortedElements.get(supremumIdx);
+		return sortedElements.get(supremumIdxInSortedSet);
 	}
 
 }

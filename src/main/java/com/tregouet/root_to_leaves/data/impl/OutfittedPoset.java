@@ -13,13 +13,15 @@ import java.util.stream.IntStream;
 import com.tregouet.root_to_leaves.data.IPoset;
 
 import fjab.poset.Poset;
+import fjab.poset.PosetUtil;
 import fjab.poset.Util;
 
 public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 
 	//Safe
-	public OutfittedPoset(List<T> elements, int[][] incidenceMatrix) {
-		super(elements, incidenceMatrix);
+	public OutfittedPoset(List<T> sortedElements, int[][] incidenceMatrix) {
+		super(sortedElements, incidenceMatrix);
+		sortMatrixes();
 	}
 	
 	//UNSAFE : no validation of arguments
@@ -31,6 +33,7 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 	//Safe
 	public OutfittedPoset(Map<T, Set<T>> relation) {
 		super(relation);
+		sortMatrixes();
 	}
 	
 	@Override
@@ -49,6 +52,18 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		}
 		return UNCOMPARABLE;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) 
+			return false;
+		@SuppressWarnings("unchecked")
+		OutfittedPoset<T> other = (OutfittedPoset<T>) o;
+		if (alignMatrixes(other))
+			return super.equals(other);
+		return false;
+	}	
 	
 	@Override
 	public Set<T> getLowerSet(T elem) {
@@ -375,6 +390,45 @@ public class OutfittedPoset<T> extends Poset<T> implements IPoset<T> {
 		while (subsetIte.hasNext())
 			upperSetIdxes.retainAll(getUpperSetIndexes(subsetIte.next()));
 		return upperSetIdxes;
-	}	
+	}
+
+	private void sortMatrixes() {
+		if (!elements.equals(sortedElements)) {
+			int[][] sortedTransRed = new int[elements.size()][elements.size()];
+			for (int i = 0 ; i < sortedElements.size() ; i++) {
+				sortedTransRed[i][i] = 1;
+				for (T succ : getSuccessorsOf(sortedElements.get(i)))
+					sortedTransRed[i][sortedElements.indexOf(succ)] = 1;
+			}
+			elements = sortedElements;
+			transitiveReduction = sortedTransRed;
+			transitiveExpansion = PosetUtil.transitiveExpansion(sortedTransRed);
+		}
+	}
+	
+	/**
+	 * If two poset have the same set of elements, then align their matrixes so that they map to the same 
+	 * sorted list of elements. Makes matrixes comparable. 
+	 * @param other
+	 * @return false of the specified poset's set of elements is not equal to this
+	 */
+	public boolean alignMatrixes(IPoset<T> other) {
+		List<T> alignedSorting = other.getSortedSet();
+		if (!alignedSorting.equals(sortedElements)) {
+			if (!this.getSet().equals(other.getSet()))
+				return false;
+			int[][] alignedTransRed = new int[elements.size()][elements.size()];
+			for (int i = 0 ; i < alignedSorting.size() ; i++) {
+				alignedTransRed[i][i] = 1;
+				for (T succ : getSuccessorsOf(alignedSorting.get(i)))
+					alignedTransRed[i][alignedSorting.indexOf(succ)] = 1;
+			}
+			sortedElements = alignedSorting;
+			elements = alignedSorting;
+			transitiveReduction = alignedTransRed;
+			transitiveExpansion = PosetUtil.transitiveExpansion(alignedTransRed);
+		}
+		return true;
+	}
 
 }

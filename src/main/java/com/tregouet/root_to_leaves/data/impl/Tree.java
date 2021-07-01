@@ -14,8 +14,8 @@ import com.tregouet.root_to_leaves.error.InvalidTreeException;
 public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 
 	//UNSAFE : no validation of arguments
-	public Tree(List<T> elements, int[][] incidenceMatrix, boolean skipChecks, boolean skipSorting) {
-		super(elements, incidenceMatrix);
+	public Tree(List<T> sortedElements, int[][] incidenceMatrix, boolean skipChecks, boolean skipSorting) {
+		super(sortedElements, incidenceMatrix);
 	}
 	
 	//Safe
@@ -30,15 +30,7 @@ public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 	}
 	
 	public boolean isATreeElement(int elemIdx) {
-		if (elements.get(elemIdx).equals(getRoot()))
-			return true;
-		boolean discarded = true;
-		int setIdx = 0;
-		while (discarded && setIdx < elements.size()) {
-			discarded = (transitiveExpansion[setIdx][elemIdx] == 1 && setIdx != elemIdx);
-			setIdx++;
-		}
-		return !discarded;
+		return (transitiveExpansion[elements.indexOf(getRoot())][elemIdx] == 1);
 	}
 
 	@Override
@@ -74,6 +66,23 @@ public class Tree<T> extends OutfittedPoset<T> implements ITree<T> {
 		Set<T> leaves = getTreeLeaves();
 		if (chains.size() != leaves.size())
 			throw new InvalidTreeException("Tree.validateArguments() : inconsistency.");
+	}
+	
+	@Override
+	public String toString() {
+		return toString(0, getRoot());
+	}
+	
+	private String toString(int tabIdx, T elem) {
+		String tabulation = "   ";
+		StringBuilder sB = new StringBuilder();
+		for (int i = 0 ; i < tabIdx ; i++) {
+			sB.append(tabulation);
+		}
+		sB.append(elem.toString() + System.lineSeparator());
+		for (T succ : getSuccessorsOf(elem))
+			sB.append(toString(tabIdx + 1, succ));
+		return sB.toString();
 	}
 
 }
