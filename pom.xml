@@ -1,63 +1,66 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.tregouet</groupId>
-  <artifactId>root-to-leaves</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.tregouet</groupId>
+	<artifactId>root-to-leaves</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>root-to-leaves</name>
-  <url>http://maven.apache.org</url>
+	<name>root-to-leaves</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.11</maven.compiler.source>
-    <maven.compiler.target>1.11</maven.compiler.target>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.11</maven.compiler.source>
+		<maven.compiler.target>1.11</maven.compiler.target>
+	</properties>
 
-  <dependencies>
-  		<!-- Unit tests -->
-	    <dependency>
-	      <groupId>junit</groupId>
-	      <artifactId>junit</artifactId>
-	      <version>3.8.1</version>
-	      <scope>test</scope>
-	    </dependency>
-	    
-	    <!-- N-dimensional arrays -->
-	    <dependency>
-	    	<groupId>hyperdrive</groupId>
-	    	<artifactId>hyperdrive</artifactId>
-	    	<version>0.0.1-SNAPSHOT</version>
-	    </dependency>
-	  
-	    <!-- for visualization in unit tests -->	    
+	<dependencies>
+		<!-- Unit tests -->
 
-   		<dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- N-dimensional arrays -->
+		<dependency>
+			<groupId>hyperdrive</groupId>
+			<artifactId>hyperdrive</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- for visualization in unit tests -->
+
+		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
 			<version>1.5.1</version>
 		</dependency>
-	    
-	    <dependency>
-	    <groupId>org.jgrapht</groupId>
-	    <artifactId>jgrapht-io</artifactId>
-	    <version>1.5.1</version>
-		</dependency>
-	    
-	    <dependency>
-		    <groupId>guru.nidi</groupId>
-		    <artifactId>graphviz-java</artifactId>
-		    <version>0.18.1</version>
-		</dependency>
-		
+
 		<dependency>
-		    <groupId>ch.qos.logback</groupId>
-		    <artifactId>logback-classic</artifactId>
-		    <version>1.2.3</version>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-io</artifactId>
+			<version>1.5.1</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>guru.nidi</groupId>
+			<artifactId>graphviz-java</artifactId>
+			<version>0.18.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
 		<!-- implementation of a poset -->
 
 		<dependency>
@@ -65,5 +68,5 @@
 			<artifactId>poset</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-  </dependencies>
+	</dependencies>
 </project>
